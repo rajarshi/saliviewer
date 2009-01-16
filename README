@@ -1,8 +1,10 @@
 SALI Viewer
 
-This is an application to generate and explore SALI networks and SALI
+This is a Java application to generate and explore SALI networks and SALI
 curves as described in references [1] and [2]. The code is based on
-the CDK and a heavily modified version of ZGRviewer (0.8.0).
+the CDK and a heavily modified version of ZGRviewer (0.8.0). See
+http://cheminfo.informatics.indiana.edu/~rguha/code/java/salivis/ for 
+more details on usage
 
 Building
 --------
@@ -11,7 +13,9 @@ To build the SALI viewer jar file, run
 
 > ant sali
 
-You should see a file called sali.jar in the current directory. To see
+You should see a file called sali.jar in the current directory. This
+jar file is pretty large as it includes the whole CDK. The advantage
+is that you will not need any other jar files in your CLASSPATH. To see
 other available targets, run 
 
 > ant info
@@ -22,3 +26,16 @@ Contact
 
 For bugs, feature requests, and everything else contact me at 
 rajarshi.guha@gmail.com
+
+References
+----------
+
+[1] Guha, R.; Van Drie, J.H. J. Chem. Inf. Model., 2008, 48, 
+    646-658 (DOI: http://dx.doi.org/10.1021/ci7004093)
+
+[2] Guha, R.; Van Drie, J.H., J. Chem. Inf. Model., 2008, 48,
+    1716-1728 (DOI: http://dx.doi.org/10.1021/ci8001414)
+
+[3] CDK http://apps.sourceforge.net/mediawiki/cdk/index.php?title=Main_Page
+
+[4] ZGRViewer http://zvtm.sourceforge.net/zgrviewer.html
