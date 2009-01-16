@@ -6,6 +6,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="lib.dir" value="libs/" />
 
+    <!-- Pull in ant-contrib -->
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
     <!-- Set up the CLASSPATH -->
@@ -19,9 +20,12 @@
     <target id="clean" name="clean">
 	<delete dir="${build.dir}" />
 	<delete file="sali.jar" />
-	<delete file="sali-src*.tgz" />
+	<delete>
+	    <fileset dir="." includes="sali-src*.tgz" />
+	</delete>
     </target>
 
+    <!-- for internal use -->
     <target id="prep" name="prep">
 	<mkdir dir="${build.dir}" />
 	<mkdir dir="${classes.dir}" />
