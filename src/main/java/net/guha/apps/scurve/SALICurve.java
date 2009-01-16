@@ -12,8 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * @author Rajarshi Guha
  */
 public class SALICurve extends JFrame {
 
@@ -186,13 +185,13 @@ public class SALICurve extends JFrame {
         for (int i = 0; i < type1vals.length; i++) sauc += type1vals[i];
         sauc = sauc / type1vals.length;
         sauc = Math.round(sauc * 100.0) / 100.0;
-        
+
         // OK, lets make the charts. First the type 1
         // then the type 2
         LineChart lineChart = new LineChart(cutoffs, type1vals,
                 500, 500,
                 new double[]{-1, 1},
-                "SALI Curve (Type 1)", "S(X)", "SCI = "+sauc);
+                "SALI Curve (Type 1)", "S(X)", "SCI = " + sauc);
         type1Pane.removeAll();
         type1Pane.add(lineChart.getChartPanel(), BorderLayout.CENTER);
 

@@ -9,8 +9,10 @@ import org.openscience.cdk.isomorphism.mcss.RMap;
 import java.util.*;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * Utility methods to perform substructure operations.
+ *
+ * @author Rajarshi Guha
+ *  
  */
 public class NonCommonSubstructure {
     

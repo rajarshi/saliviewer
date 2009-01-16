@@ -1,8 +1,9 @@
 package net.guha.apps;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * A class representing the SALI value for a pair of molecules.
+ *
+ * @author Rajarshi Guha
  */
 public class SALIPair implements Comparable {
     private String head;
@@ -13,6 +14,16 @@ public class SALIPair implements Comparable {
     private double sim;
 
 
+    /**
+     * Create a SALI pair.
+     *
+     * @param head SMILES string for the molecule at the head
+     * @param tail SMILES string for the molecules at the tail
+     * @param headActivity activity value for the head molecule
+     * @param tailActivity activity for the tail molecule
+     * @param sali The SALI value for this pair of molecules
+     * @param sim The Tanimoto similarity for this pair of molecules
+     */
     public SALIPair(String head, String tail, double headActivity, double tailActivity, double sali, double sim) {
         this.head = head;
         this.tail = tail;

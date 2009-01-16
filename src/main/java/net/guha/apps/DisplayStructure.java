@@ -1,6 +1,8 @@
 package net.guha.apps;
 
 import net.claribole.zgrviewer.ConfigManager;
+import net.guha.apps.renderer.ViewMolecules2D;
+import net.guha.apps.renderer.Renderer2DPanel;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -15,13 +17,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
+ * Utility methods to display structure diagrams.
+ * 
  * Note that ZGRViewer considers the tail of an edge to be the starting
  * point of an arrow and the head of an edge the ending point of an arrow
  * <p/>
  * In this frame, the head will have smaller activity, the tail higher activity
  *
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * @author Rajarshi Guha
  */
 public class DisplayStructure {
     static DecimalFormat activityFormat = new DecimalFormat("############.00");

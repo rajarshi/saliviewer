@@ -10,8 +10,8 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * @author Rajarshi Guha
+
  */
 public class DataPane extends JPanel {
 

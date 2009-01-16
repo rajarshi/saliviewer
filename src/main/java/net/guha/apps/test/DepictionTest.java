@@ -2,8 +2,8 @@ package net.guha.apps.test;
 
 import junit.framework.Assert;
 import net.claribole.zgrviewer.ConfigManager;
-import net.guha.apps.Renderer2DPanel;
-import net.guha.apps.ViewMolecules2D;
+import net.guha.apps.renderer.Renderer2DPanel;
+import net.guha.apps.renderer.ViewMolecules2D;
 import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecule;
@@ -40,7 +40,7 @@ public class DepictionTest {
                 ConfigManager.depictionX, ConfigManager.depictionY, false,
                 "Blah", 1.23);
         rendererPanel.setName("rendererPanel");
-        JFrame frame = ViewMolecules2D.singleStructurePanel(rendererPanel, 300, 300);        
+        JFrame frame = ViewMolecules2D.singleStructurePanel(rendererPanel, 300, 300);
         frame.setVisible(true);
         Assert.assertTrue(true);
     }

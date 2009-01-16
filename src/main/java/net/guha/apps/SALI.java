@@ -27,6 +27,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
+ * Main class that performs SALI calculations.
+ * 
  * @author Rajarshi Guha
  */
 public class SALI {

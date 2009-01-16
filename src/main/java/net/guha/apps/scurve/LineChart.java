@@ -15,8 +15,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import java.awt.*;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * @author Rajarshi Guha 
  */
 public class LineChart {
 

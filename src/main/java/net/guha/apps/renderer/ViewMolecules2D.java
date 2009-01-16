@@ -1,4 +1,6 @@
-package net.guha.apps;
+package net.guha.apps.renderer;
+
+import net.guha.apps.renderer.Renderer2DPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,8 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * @cdk Rajarshi Guha 
  */
 public class ViewMolecules2D {
 

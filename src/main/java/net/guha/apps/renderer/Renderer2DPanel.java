@@ -1,4 +1,4 @@
-package net.guha.apps;
+package net.guha.apps.renderer;
 
 import net.claribole.zgrviewer.ConfigManager;
 import org.openscience.cdk.DefaultChemObjectBuilder;
@@ -16,7 +16,12 @@ import java.awt.*;
 import java.text.DecimalFormat;
 
 /**
- * @author rguha
+ * A JPanel to display 2D depictions.
+ *
+ * Modified version of RenderPanel.java from the jchempaint-primary branch
+ * of the CDK
+ * 
+ * @author Rajarshi Guha
  */
 public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     private IntermediateRenderer renderer;
