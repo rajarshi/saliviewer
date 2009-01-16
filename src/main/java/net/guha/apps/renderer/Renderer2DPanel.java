@@ -32,10 +32,38 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     IMolecule molecule;
     boolean fitToScreen = true;
 
-    String title;
-    double activity;
+    String title = "NA";
+    double activity = -9999.0;
     DecimalFormat activityFormat = new DecimalFormat("############.00");
 
+
+    /**
+     * Create an instance of the rendering panel.
+     *
+     * This is a simplified constructor that uses defaults for the molecule
+     * title and activity. Also it does not allow one to highlight substructures.
+     *
+     * @param mol molecule to render. Should have 2D coordinates
+     * @param x width of the panel
+     * @param y height of the panel
+     */
+    public Renderer2DPanel(IAtomContainer mol, int x, int y) {
+        this(mol, null, x, y, false, "NA", -9999.0);
+    }
+
+    /**
+     * Create an instance of the rendering panel.
+     *
+     * @param mol molecule to render. Should have 2D coordinates
+     * @param needle  A fragment representing a substructure of the above molecule.
+     * This substructure will be highlighted in the depiction. If no substructure
+     * is to be highlighted, then set this to null
+     * @param x width of the panel
+     * @param y height of the panel
+     * @param withHydrogen Should hydrogens be displayed
+     * @param name The name of the molecule
+     * @param activity The activity associated with the molecule
+     */
     public Renderer2DPanel(IAtomContainer mol, IAtomContainer needle, int x, int y,
                            boolean withHydrogen, String name, double activity) {
         this.title = name;
@@ -139,6 +167,11 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     }
 
 
+    /**
+     * Adds the molecule title and activity to the depiction.
+     *
+     * @param g The graphics context
+     */
     private void annotateFigure(Graphics g) {
         g.setFont(ConfigManager.defaultFont);
 
