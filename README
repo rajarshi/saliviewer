@@ -1,0 +1,24 @@
+SALI Viewer
+
+This is an application to generate and explore SALI networks and SALI
+curves as described in references [1] and [2]. The code is based on
+the CDK and a heavily modified version of ZGRviewer (0.8.0).
+
+Building
+--------
+
+To build the SALI viewer jar file, run 
+
+> ant sali
+
+You should see a file called sali.jar in the current directory. To see
+other available targets, run 
+
+> ant info
+
+
+Contact 
+-------
+
+For bugs, feature requests, and everything else contact me at 
+rajarshi.guha@gmail.com
