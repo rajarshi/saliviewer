@@ -6,6 +6,8 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="lib.dir" value="libs/" />
 
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
     <!-- Set up the CLASSPATH -->
     <path id="project.libs">
 	<fileset dir="${lib.dir}">
@@ -16,6 +18,8 @@
 
     <target id="clean" name="clean">
 	<delete dir="${build.dir}" />
+	<delete file="sali.jar" />
+	<delete file="sali-src*.tgz" />
     </target>
 
     <target id="prep" name="prep">
@@ -30,7 +34,7 @@
 	<javac srcdir="${sources}:${generated.sources}"
 	       destdir="${classes.dir}"
 	       excludes="${test.sources}/**"> 
-	       <classpath refid="${project.classpath}" />
+	    <classpath refid="${project.classpath}" />
 	</javac>
 	<copy todir="target/classes/images">
 	    <fileset dir="src/main/resources/images" />
@@ -81,6 +85,25 @@
 		<include name="**/*" />
 	    </fileset>
 	</jar>
+    </target>
+
+    <target id="srcdist" name="srcdist" depends="clean">
+	<loadfile property="version.line" srcfile="src/main/java/net/claribole/zgrviewer/Messages.java">
+	    <filterchain>
+		<linecontainsregexp>
+		    <regexp pattern="static final String SALI_VERSION ="/>
+		</linecontainsregexp>
+	    </filterchain>
+	</loadfile>
+	<propertyregex property="version" input="${version.line}"
+		       regexp="([0-9]*\.[0-9]*)"
+		       select="\1"/>
+	<tar
+	    destfile="sali-src-${version}.tgz"
+	    basedir="${basedir}"
+	    compression="gzip"
+	    excludes="**/.git, .gitignore, *.ipr, *.iws, *.iml">
+	</tar>
     </target>
 
     <target id="info" name="info">
