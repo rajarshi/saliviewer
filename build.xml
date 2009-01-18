@@ -6,6 +6,7 @@
     <property name="classes.dir" value="${build.dir}/classes" />
     <property name="lib.dir" value="libs/" />
 
+
     <!-- Pull in ant-contrib -->
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
@@ -106,12 +107,12 @@
 	    destfile="sali-src-${version}.tgz"
 	    basedir="${basedir}"
 	    compression="gzip"
-	    excludes="\.git, .gitignore, *.ipr, *.iws, *.iml">
+	    excludes=".git/**, .gitignore/**, *.ipr, *.iws, *.iml">
 	</tar>
 	<zip
 	    zipfile="sali-src-${version}.zip"
 	    basedir="${basedir}"
-	    excludes="\.git, .gitignore, *.ipr, *.iws, *.iml, sali-src-${version}.tgz">
+	    excludes=".git/**, .gitignore/**, *.ipr, *.iws, *.iml, sali-src-${version}.tgz">
 	</zip>
     </target>
 
