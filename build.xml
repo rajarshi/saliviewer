@@ -21,7 +21,7 @@
 	<delete dir="${build.dir}" />
 	<delete file="sali.jar" />
 	<delete>
-	    <fileset dir="." includes="sali-src*.tgz" />
+	    <fileset dir="." includes="sali-src*" />
 	</delete>
     </target>
 
@@ -106,8 +106,13 @@
 	    destfile="sali-src-${version}.tgz"
 	    basedir="${basedir}"
 	    compression="gzip"
-	    excludes="**/.git, .gitignore, *.ipr, *.iws, *.iml">
+	    excludes="\.git, .gitignore, *.ipr, *.iws, *.iml">
 	</tar>
+	<zip
+	    zipfile="sali-src-${version}.zip"
+	    basedir="${basedir}"
+	    excludes="\.git, .gitignore, *.ipr, *.iws, *.iml, sali-src-${version}.tgz">
+	</zip>
     </target>
 
     <target id="info" name="info">
