@@ -86,6 +86,12 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         hub.getIJava2DRenderer().getRenderer2DModel().setShowAromaticity(true);
         hub.getIJava2DRenderer().getRenderer2DModel().setUseAntiAliasing(true);
         hub.getIJava2DRenderer().getRenderer2DModel().setIsCompact(false);
+        hub.getIJava2DRenderer().getRenderer2DModel().setColorAtomsByType(false);
+
+        if (needle != null)  {
+            hub.getIJava2DRenderer().getRenderer2DModel().setExternalHighlightColor(Color.red);
+            hub.getIJava2DRenderer().getRenderer2DModel().setExternalSelectedPart(needle);
+        }
 
         isNewChemModel = true;
 

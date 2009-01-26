@@ -24,7 +24,7 @@ public class Messages {
 
     static final String VERSION = "0.8.0";
 
-    static final String SALI_VERSION = "1.7";
+    static final String SALI_VERSION = "1.8";
 
     static final String about = "SALI Viewer ("+SALI_VERSION+") based on ZGRViewer " + VERSION +
             "\n\nA Visualization Tool for GraphViz based on ZVTM"+

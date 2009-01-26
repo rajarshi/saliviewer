@@ -73,9 +73,33 @@ public class DepictionTest {
         frame.setVisible(true);
 
     }
+
+    public void runCase3() throws Exception {
+        String smiles = "COC1CCC1CNC(=O)C";
+        IAtomContainer molecule = smilesParser.parseSmiles(smiles);
+        sdg.setMolecule((IMolecule) molecule);
+        sdg.generateCoordinates();
+        molecule = sdg.getMolecule();
+
+        IAtomContainer needle = DefaultChemObjectBuilder.getInstance().newAtomContainer();
+        needle.addAtom(molecule.getAtom(0));
+        needle.addAtom(molecule.getAtom(1));
+        needle.addBond(molecule.getBond(molecule.getAtom(0),
+                molecule.getAtom(1)));
+
+
+        Renderer2DPanel rendererPanel = new Renderer2DPanel(molecule, needle,
+                ConfigManager.depictionX, ConfigManager.depictionY, false,
+                "Blah", 1.23);
+        rendererPanel.setName("rendererPanel");
+        JFrame frame = ViewMolecules2D.singleStructurePanel(rendererPanel, 300, 300);
+        frame.setVisible(true);
+        Assert.assertTrue(true);
+    }
+
     public static void main(String[] args) throws Exception {
         DepictionTest dt = new DepictionTest();
-        dt.runCase2();
+        dt.runCase3();
 
     }
 
