@@ -70,7 +70,7 @@
     <target id="sali" name="sali" depends="compile">
 	<unjar dest="${classes.dir}" >
 	    <fileset dir="${lib.dir}"
-		     excludes="junit*.jar,vecmath*.jar,jgraph*" >
+		     excludes="cdk-1*.jar,junit*.jar" >
 		<include name="*.jar" />
 	    </fileset>
 	    <!--
@@ -101,7 +101,7 @@
 	    </filterchain>
 	</loadfile>
 	<propertyregex property="version" input="${version.line}"
-		       regexp="([0-9]*\.[0-9]*)"
+		       regexp="([0-9]*\.[0-9]*\.[0-9]*)"
 		       select="\1"/>
 	<tar
 	    destfile="sali-src-${version}.tgz"
