@@ -12,19 +12,21 @@ import org.openscience.cdk.interfaces.IMoleculeSet;
 import org.openscience.cdk.renderer.RendererModel;
 import org.openscience.cdk.renderer.RenderingParameters;
 import org.openscience.cdk.renderer.font.AWTFontManager;
+import org.openscience.cdk.renderer.generators.*;
 import org.openscience.cdk.renderer.visitor.AWTDrawVisitor;
 import org.openscience.cdk.renderer.visitor.IDrawVisitor;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * A JPanel to display 2D depictions.
- *
+ * <p/>
  * Modified version of RenderPanel.java from the jchempaint-primary branch
  * of the CDK
- * 
+ *
  * @author Rajarshi Guha
  */
 public class Renderer2DPanel extends JPanel implements IViewEventRelay {
@@ -45,13 +47,13 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
 
     /**
      * Create an instance of the rendering panel.
-     *
+     * <p/>
      * This is a simplified constructor that uses defaults for the molecule
      * title and activity. Also it does not allow one to highlight substructures.
      *
      * @param mol molecule to render. Should have 2D coordinates
-     * @param x width of the panel
-     * @param y height of the panel
+     * @param x   width of the panel
+     * @param y   height of the panel
      */
     public Renderer2DPanel(IAtomContainer mol, int x, int y) {
         this(mol, null, x, y, false, "NA", -9999.0);
@@ -60,15 +62,15 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     /**
      * Create an instance of the rendering panel.
      *
-     * @param mol molecule to render. Should have 2D coordinates
-     * @param needle  A fragment representing a substructure of the above molecule.
-     * This substructure will be highlighted in the depiction. If no substructure
-     * is to be highlighted, then set this to null
-     * @param x width of the panel
-     * @param y height of the panel
+     * @param mol          molecule to render. Should have 2D coordinates
+     * @param needle       A fragment representing a substructure of the above molecule.
+     *                     This substructure will be highlighted in the depiction. If no substructure
+     *                     is to be highlighted, then set this to null
+     * @param x            width of the panel
+     * @param y            height of the panel
      * @param withHydrogen Should hydrogens be displayed
-     * @param name The name of the molecule
-     * @param activity The activity associated with the molecule
+     * @param name         The name of the molecule
+     * @param activity     The activity associated with the molecule
      */
     public Renderer2DPanel(IAtomContainer mol, IAtomContainer needle, int x, int y,
                            boolean withHydrogen, String name, double activity) {
@@ -88,17 +90,28 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         renderParam.setColorAtomsByType(false);
         renderParam.setShowAromaticity(true);
         renderParam.setUseAntiAliasing(true);
-        if (needle!=null) {}
-
+        renderParam.setFitToScreen(true);
+        if (needle != null) {
+        }
 
         rendererModel = new RendererModel(renderParam);
-        renderer = new org.openscience.cdk.renderer.Renderer(new AWTFontManager());
-        
+
+        java.util.List<IGenerator> generators = new ArrayList<IGenerator>();
+        generators.add(new RingGenerator(this.rendererModel));
+        generators.add(new BasicAtomGenerator(this.rendererModel));
+        generators.add(new HighlightGenerator(this.rendererModel));
+        generators.add(new AtomNumberGenerator(this.rendererModel));
+        generators.add(new RadicalGenerator(this.rendererModel));
+        generators.add(new LonePairGenerator(this.rendererModel));
+        generators.add(new SelectionGenerator(this.rendererModel));
+
+        renderer = new org.openscience.cdk.renderer.Renderer(generators, new AWTFontManager());
+
         controllerModel = new ControllerModel();
         hub = new ControllerHub(controllerModel, renderer, chemModel, this);
 
-        if (needle != null)  {
-            
+        if (needle != null) {
+
         }
 
         isNewChemModel = true;
@@ -168,7 +181,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     }
 
     public void paint(Graphics g) {
-        this.setBackground(renderer.getRenderer2DModel().getBackColor());        
+        this.setBackground(renderer.getRenderer2DModel().getBackColor());
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -232,5 +245,5 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     public void updateView() {
         this.shouldPaintFromCache = false;
         this.repaint();
-    }    
+    }
 }
