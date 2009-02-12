@@ -36,6 +36,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     IMolecule molecule;
     boolean fitToScreen = true;
     IDrawVisitor drawVisitor;
+    RendererModel rendererModel;
 
     String title = "NA";
     double activity = -9999.0;
@@ -90,7 +91,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         if (needle!=null) {}
 
 
-        RendererModel rendererModel = new RendererModel(renderParam);
+        rendererModel = new RendererModel(renderParam);
         renderer = new org.openscience.cdk.renderer.Renderer(new AWTFontManager());
         
         controllerModel = new ControllerModel();
@@ -147,7 +148,8 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
 
 
     private void paintChemModel(IChemModel chemModel, Graphics2D g, Rectangle bounds) {
-        renderer.paintChemModel(chemModel, new AWTDrawVisitor(g), bounds, isNewChemModel);
+        drawVisitor = new AWTDrawVisitor(g);
+        renderer.paintChemModel(chemModel, drawVisitor, bounds, isNewChemModel);
         isNewChemModel = false;
 
         /*
