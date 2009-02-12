@@ -61,12 +61,10 @@ public class DepictionTest {
         Renderer2DPanel rp1 = new Renderer2DPanel(molecule1, null,
                 ConfigManager.depictionX, ConfigManager.depictionY, false,
                 "Blah1", 1.23);
-        rp1.setFitToScreen(true);
 
         Renderer2DPanel rp2 = new Renderer2DPanel(molecule2, null,
                 ConfigManager.depictionX, ConfigManager.depictionY, false,
                 "Blah2", 1.25);
-        rp2.setFitToScreen(true);
         
         JFrame frame = ViewMolecules2D.multiStructurePanel(new Renderer2DPanel[]{rp1, rp2},
                 2, 200,200);

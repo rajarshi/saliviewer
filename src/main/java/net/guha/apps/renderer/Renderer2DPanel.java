@@ -9,7 +9,11 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IChemModel;
 import org.openscience.cdk.interfaces.IMolecule;
 import org.openscience.cdk.interfaces.IMoleculeSet;
-import org.openscience.cdk.renderer.IntermediateRenderer;
+import org.openscience.cdk.renderer.RendererModel;
+import org.openscience.cdk.renderer.RenderingParameters;
+import org.openscience.cdk.renderer.font.AWTFontManager;
+import org.openscience.cdk.renderer.visitor.AWTDrawVisitor;
+import org.openscience.cdk.renderer.visitor.IDrawVisitor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,13 +28,14 @@ import java.text.DecimalFormat;
  * @author Rajarshi Guha
  */
 public class Renderer2DPanel extends JPanel implements IViewEventRelay {
-    private IntermediateRenderer renderer;
+    private org.openscience.cdk.renderer.Renderer renderer;
     private boolean isNewChemModel;
     private ControllerHub hub;
     private ControllerModel controllerModel;
     private boolean shouldPaintFromCache;
     IMolecule molecule;
     boolean fitToScreen = true;
+    IDrawVisitor drawVisitor;
 
     String title = "NA";
     double activity = -9999.0;
@@ -78,19 +83,21 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         IChemModel chemModel = DefaultChemObjectBuilder.getInstance().newChemModel();
         chemModel.setMoleculeSet(moleculeSet);
 
-        renderer = new IntermediateRenderer();
-        renderer.setFitToScreen(true);
+        RenderingParameters renderParam = new RenderingParameters();
+        renderParam.setColorAtomsByType(false);
+        renderParam.setShowAromaticity(true);
+        renderParam.setUseAntiAliasing(true);
+        if (needle!=null) {}
+
+
+        RendererModel rendererModel = new RendererModel(renderParam);
+        renderer = new org.openscience.cdk.renderer.Renderer(new AWTFontManager());
+        
         controllerModel = new ControllerModel();
         hub = new ControllerHub(controllerModel, renderer, chemModel, this);
 
-        hub.getIJava2DRenderer().getRenderer2DModel().setShowAromaticity(true);
-        hub.getIJava2DRenderer().getRenderer2DModel().setUseAntiAliasing(true);
-        hub.getIJava2DRenderer().getRenderer2DModel().setIsCompact(false);
-        hub.getIJava2DRenderer().getRenderer2DModel().setColorAtomsByType(false);
-
         if (needle != null)  {
-            hub.getIJava2DRenderer().getRenderer2DModel().setExternalHighlightColor(Color.red);
-            hub.getIJava2DRenderer().getRenderer2DModel().setExternalSelectedPart(needle);
+            
         }
 
         isNewChemModel = true;
@@ -138,8 +145,9 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
                 || screenBounds.getMaxY() < diagramBounds.getMaxY();
     }
 
+
     private void paintChemModel(IChemModel chemModel, Graphics2D g, Rectangle bounds) {
-        renderer.paintChemModel(chemModel, g, bounds, isNewChemModel);
+        renderer.paintChemModel(chemModel, new AWTDrawVisitor(g), bounds, isNewChemModel);
         isNewChemModel = false;
 
         /*
@@ -163,7 +171,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (this.shouldPaintFromCache) {
-            this.paintFromCache(g2);
+//            this.paintFromCache(g2);
         } else {
 //            this.paintChemModel(g2, this.getBounds());
             this.paintChemModel(g2, new Rectangle(0, 0, getWidth(), getHeight()));
@@ -214,17 +222,13 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
 //        updateView();
     }
 
-    private void paintFromCache(Graphics2D g) {
-        renderer.repaint(g);
-    }
+//    private void paintFromCache(Graphics2D g) {
+//        renderer.repaint(g);
+//    }
 
 
     public void updateView() {
         this.shouldPaintFromCache = false;
         this.repaint();
-    }
-
-    public void setFitToScreen(boolean fitToScreen) {
-        this.renderer.setFitToScreen(fitToScreen);
-    }
+    }    
 }
