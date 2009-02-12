@@ -91,19 +91,22 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         renderParam.setShowAromaticity(true);
         renderParam.setUseAntiAliasing(true);
         renderParam.setFitToScreen(true);
-        if (needle != null) {
-        }
+        renderParam.setSelectedPartColor(Color.green);
 
         rendererModel = new RendererModel(renderParam);
 
+        if (needle != null) {
+            System.out.println("Setting needle");
+//            rendererModel.getSelection().select(needle);
+            rendererModel.setExternalSelectedPart(needle);
+            rendererModel.setExternalHighlightColor(Color.blue);
+        }
+
         java.util.List<IGenerator> generators = new ArrayList<IGenerator>();
-        generators.add(new RingGenerator(this.rendererModel));
-        generators.add(new BasicAtomGenerator(this.rendererModel));
-        generators.add(new HighlightGenerator(this.rendererModel));
-        generators.add(new AtomNumberGenerator(this.rendererModel));
-        generators.add(new RadicalGenerator(this.rendererModel));
-        generators.add(new LonePairGenerator(this.rendererModel));
-        generators.add(new SelectionGenerator(this.rendererModel));
+        generators.add(new RingGenerator(rendererModel));
+        generators.add(new BasicAtomGenerator(rendererModel));
+        generators.add(new HighlightGenerator(rendererModel));
+        generators.add(new SelectionGenerator(rendererModel));
 
         renderer = new org.openscience.cdk.renderer.Renderer(generators, new AWTFontManager());
 
@@ -192,7 +195,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
             this.paintChemModel(g2, new Rectangle(0, 0, getWidth(), getHeight()));
 
         }
-        annotateFigure(g);
+//        annotateFigure(g);
     }
 
 

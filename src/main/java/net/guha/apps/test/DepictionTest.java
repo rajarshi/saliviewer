@@ -97,7 +97,7 @@ public class DepictionTest {
 
     public static void main(String[] args) throws Exception {
         DepictionTest dt = new DepictionTest();
-        dt.runCase2();
+        dt.runCase3();
 
     }
 
