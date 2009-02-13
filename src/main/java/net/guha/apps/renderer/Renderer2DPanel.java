@@ -86,6 +86,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         chemModel.setMoleculeSet(moleculeSet);
 
         rendererModel = new RendererModel();
+        rendererModel.setShowAromaticity(true);
 
         java.util.List<IGenerator> generators = new ArrayList<IGenerator>();
         generators.add(new RingGenerator(rendererModel));

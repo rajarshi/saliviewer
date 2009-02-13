@@ -99,7 +99,7 @@ public class DepictionTest {
 
     public static void main(String[] args) throws Exception {
         DepictionTest dt = new DepictionTest();
-        dt.runCase1();
+        dt.runCase2();
 
     }
 
