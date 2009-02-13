@@ -14,8 +14,7 @@ import org.openscience.cdk.smiles.SmilesParser;
 import javax.swing.*;
 
 /**
- * @cdk.author Rajarshi Guha
- * @cdk.svnrev $Revision: 9162 $
+ * author Rajarshi Guha
  */
 public class DepictionTest {
 
@@ -37,7 +36,7 @@ public class DepictionTest {
         molecule = sdg.getMolecule();
 
         Renderer2DPanel rendererPanel = new Renderer2DPanel(molecule, null,
-                ConfigManager.depictionX, ConfigManager.depictionY, false,
+                ConfigManager.depictionX, ConfigManager.depictionY,
                 "Blah", 1.23);
         rendererPanel.setName("rendererPanel");
         JFrame frame = ViewMolecules2D.singleStructurePanel(rendererPanel, 300, 300);
@@ -59,11 +58,11 @@ public class DepictionTest {
         molecule2 = sdg.getMolecule();
 
         Renderer2DPanel rp1 = new Renderer2DPanel(molecule1, null,
-                ConfigManager.depictionX, ConfigManager.depictionY, false,
+                ConfigManager.depictionX, ConfigManager.depictionY,
                 "Blah1", 1.23);
 
         Renderer2DPanel rp2 = new Renderer2DPanel(molecule2, null,
-                ConfigManager.depictionX, ConfigManager.depictionY, false,
+                ConfigManager.depictionX, ConfigManager.depictionY,
                 "Blah2", 1.25);
         
         JFrame frame = ViewMolecules2D.multiStructurePanel(new Renderer2DPanel[]{rp1, rp2},
@@ -82,12 +81,15 @@ public class DepictionTest {
         IAtomContainer needle = DefaultChemObjectBuilder.getInstance().newAtomContainer();
         needle.addAtom(molecule.getAtom(0));
         needle.addAtom(molecule.getAtom(1));
+        needle.addAtom(molecule.getAtom(2));
         needle.addBond(molecule.getBond(molecule.getAtom(0),
                 molecule.getAtom(1)));
+        needle.addBond(molecule.getBond(molecule.getAtom(1),
+                molecule.getAtom(2)));
 
 
         Renderer2DPanel rendererPanel = new Renderer2DPanel(molecule, needle,
-                ConfigManager.depictionX, ConfigManager.depictionY, false,
+                ConfigManager.depictionX, ConfigManager.depictionY,
                 "Blah", 1.23);
         rendererPanel.setName("rendererPanel");
         JFrame frame = ViewMolecules2D.singleStructurePanel(rendererPanel, 300, 300);
@@ -97,7 +99,7 @@ public class DepictionTest {
 
     public static void main(String[] args) throws Exception {
         DepictionTest dt = new DepictionTest();
-        dt.runCase3();
+        dt.runCase1();
 
     }
 

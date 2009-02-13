@@ -46,8 +46,8 @@ public class DisplayStructure {
         try {
             IAtomContainer molecule = getMoleculeWithCoordinates(smiles);
             Renderer2DPanel rendererPanel = new Renderer2DPanel(molecule, null,
-                    ConfigManager.depictionX, ConfigManager.depictionY, false,
-                    nodeName, activity.doubleValue());
+                    ConfigManager.depictionX, ConfigManager.depictionY,
+                    nodeName, activity);
             JFrame frame = ViewMolecules2D.singleStructurePanel(rendererPanel, width, height);
             frame.setTitle(nodeName);
             frame.setVisible(true);
@@ -103,8 +103,8 @@ public class DisplayStructure {
             }
         }
 
-        Renderer2DPanel headPanel = new Renderer2DPanel(head, headNonCommon, width, height, false, headName, headActivity.doubleValue());
-        Renderer2DPanel tailPanel = new Renderer2DPanel(tail, tailNonCommon, width, height, false, tailName, tailActivity.doubleValue());
+        Renderer2DPanel headPanel = new Renderer2DPanel(head, headNonCommon, width, height, headName, headActivity);
+        Renderer2DPanel tailPanel = new Renderer2DPanel(tail, tailNonCommon, width, height, tailName, tailActivity);
         Renderer2DPanel[] panels = new Renderer2DPanel[]{tailPanel, headPanel};
         panels[0].setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         panels[1].setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));

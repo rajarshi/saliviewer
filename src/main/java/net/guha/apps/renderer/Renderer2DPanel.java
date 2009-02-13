@@ -56,7 +56,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
      * @param y   height of the panel
      */
     public Renderer2DPanel(IAtomContainer mol, int x, int y) {
-        this(mol, null, x, y, false, "NA", -9999.0);
+        this(mol, null, x, y, "NA", -9999.0);
     }
 
     /**
@@ -64,16 +64,15 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
      *
      * @param mol          molecule to render. Should have 2D coordinates
      * @param needle       A fragment representing a substructure of the above molecule.
-     *                     This substructure will be highlighted in the depiction. If no substructure
-     *                     is to be highlighted, then set this to null
+ *                     This substructure will be highlighted in the depiction. If no substructure
+ *                     is to be highlighted, then set this to null
      * @param x            width of the panel
      * @param y            height of the panel
-     * @param withHydrogen Should hydrogens be displayed
      * @param name         The name of the molecule
      * @param activity     The activity associated with the molecule
      */
     public Renderer2DPanel(IAtomContainer mol, IAtomContainer needle, int x, int y,
-                           boolean withHydrogen, String name, double activity) {
+                           String name, double activity) {
         this.title = name;
         this.activity = activity;
         this.molecule = (IMolecule) mol;
@@ -86,35 +85,31 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         IChemModel chemModel = DefaultChemObjectBuilder.getInstance().newChemModel();
         chemModel.setMoleculeSet(moleculeSet);
 
-        RenderingParameters renderParam = new RenderingParameters();
-        renderParam.setColorAtomsByType(false);
-        renderParam.setShowAromaticity(true);
-        renderParam.setUseAntiAliasing(true);
-        renderParam.setFitToScreen(true);
-        renderParam.setSelectedPartColor(Color.green);
-
-        rendererModel = new RendererModel(renderParam);
-
-        if (needle != null) {
-            System.out.println("Setting needle");
-//            rendererModel.getSelection().select(needle);
-            rendererModel.setExternalSelectedPart(needle);
-            rendererModel.setExternalHighlightColor(Color.blue);
-        }
+        rendererModel = new RendererModel();
 
         java.util.List<IGenerator> generators = new ArrayList<IGenerator>();
         generators.add(new RingGenerator(rendererModel));
         generators.add(new BasicAtomGenerator(rendererModel));
         generators.add(new HighlightGenerator(rendererModel));
-        generators.add(new SelectionGenerator(rendererModel));
+//        generators.add(new ExternalHighlightGenerator(rendererModel));
 
         renderer = new org.openscience.cdk.renderer.Renderer(generators, new AWTFontManager());
 
         controllerModel = new ControllerModel();
         hub = new ControllerHub(controllerModel, renderer, chemModel, this);
+        hub.getRenderer().getRenderer2DModel().setColorAtomsByType(false);
+        hub.getRenderer().getRenderer2DModel().setShowAromaticity(true);
+        hub.getRenderer().getRenderer2DModel().setFitToScreen(true);
+        hub.getRenderer().getRenderer2DModel().setUseAntiAliasing(true);
+        hub.getRenderer().getRenderer2DModel().setZoomFactor(0.9);
 
         if (needle != null) {
-
+            System.out.println("Setting needle");
+//            hub.getRenderer().getRenderer2DModel().getSelection().select(needle);
+            hub.getRenderer().getRenderer2DModel().setExternalSelectedPart(needle);
+//            hub.getRenderer().getRenderer2DModel().setExternalHighlightColor(Color.red);
+            hub.getRenderer().getRenderer2DModel().setHighlightRadiusModel(0);
+            hub.getRenderer().getRenderer2DModel().setSelectionShape(RenderingParameters.AtomShape.SQUARE);
         }
 
         isNewChemModel = true;
@@ -143,8 +138,6 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
 
         IChemModel chemModel = hub.getIChemModel();
         if (chemModel != null && chemModel.getMoleculeSet() != null) {
-
-            // determine the size the canvas needs to be in order to fit the model
             Rectangle diagramBounds = renderer.calculateScreenBounds(chemModel);
             if (this.overlaps(screenBounds, diagramBounds)) {
                 Rectangle union = screenBounds.union(diagramBounds);
@@ -189,15 +182,19 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (this.shouldPaintFromCache) {
-//            this.paintFromCache(g2);
+            this.paintFromCache(g2);
         } else {
-//            this.paintChemModel(g2, this.getBounds());
+            this.paintChemModel(g2, this.getBounds());
             this.paintChemModel(g2, new Rectangle(0, 0, getWidth(), getHeight()));
 
         }
-//        annotateFigure(g);
+        annotateFigure(g);
     }
 
+
+    private void paintFromCache(Graphics2D g) {
+        renderer.repaint(drawVisitor = new AWTDrawVisitor(g));
+    }
 
     /**
      * Adds the molecule title and activity to the depiction.
@@ -205,9 +202,8 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
      * @param g The graphics context
      */
     private void annotateFigure(Graphics g) {
-        g.setFont(ConfigManager.defaultFont);
+        g.setFont(ConfigManager.defaultFont);        
 
-        Rectangle rect = g.getClipBounds();
         double w = getSize().width;
         double h = getSize().height;
 
@@ -228,22 +224,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         ypos = (int) (h - paddingY - fontMetrics.getHeight());
         g.drawString(title, xpos, ypos);
 
-        // draw a box around things
-//        String longestString;
-//        if (msg.length() > title.length()) longestString = msg;
-//        else longestString = title;
-//        ypos = (int) (h - 2 * paddingY);
-//        g.drawRect((int) (xpos - paddingX * 0.50),
-//                (int) (ypos - fontMetrics.getHeight() - paddingY * 1.05),
-//                (int) (fontMetrics.stringWidth(longestString) + paddingX * 1.25),
-//                fontMetrics.getHeight() * 2);
-//        updateView();
     }
-
-//    private void paintFromCache(Graphics2D g) {
-//        renderer.repaint(g);
-//    }
-
 
     public void updateView() {
         this.shouldPaintFromCache = false;
