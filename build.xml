@@ -1,134 +1,135 @@
 <project name="salizgrviewer" default="info" basedir=".">
-    <property name="build.dir" value="target" />
-    <property name="sources" value="src/main/java/" />
-    <property name="test.sources" value="${sources}/net/guha/apps/test" />
-    <property name="generated.sources" value="${build.dir}/generated-sources/antlr" />
-    <property name="classes.dir" value="${build.dir}/classes" />
-    <property name="lib.dir" value="libs/" />
+    <property name="build.dir" value="target"/>
+    <property name="sources" value="src/main/java/"/>
+    <property name="test.sources" value="${sources}/net/guha/apps/test"/>
+    <property name="generated.sources" value="${build.dir}/generated-sources/antlr"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="lib.dir" value="libs/"/>
 
 
     <!-- Pull in ant-contrib -->
     <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
+
     <!-- Set up the CLASSPATH -->
     <path id="project.libs">
-	<fileset dir="${lib.dir}">
-	    <include name="*.jar" />
-            <exclude name="cdk-1.1.4.jar" />		
-	</fileset>
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+            <exclude name="cdk-1.1.4.jar"/>
+        </fileset>
     </path>
-    <property name="project.classpath" value="project.libs" />
+    <property name="project.classpath" value="project.libs"/>
 
     <target id="clean" name="clean">
-	<delete dir="${build.dir}" />
-	<delete file="sali.jar" />
-	<delete>
-	    <fileset dir="." includes="sali-src*" />
-	</delete>
+        <delete dir="${build.dir}"/>
+        <delete file="sali.jar"/>
+        <delete>
+            <fileset dir="." includes="sali-src*"/>
+        </delete>
     </target>
 
     <!-- for internal use -->
     <target id="prep" name="prep">
-	<mkdir dir="${build.dir}" />
-	<mkdir dir="${classes.dir}" />
-	<mkdir dir="${build.dir}/generated-sources" />
-	<mkdir dir="${build.dir}/test-classes" />
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${build.dir}/generated-sources"/>
+        <mkdir dir="${build.dir}/test-classes"/>
     </target>
 
     <target id="compile" name="compile" depends="prep">
-	<antcall target="runAntlr" />
-	<javac srcdir="${sources}:${generated.sources}"
-	       destdir="${classes.dir}"
-	       excludes="${test.sources}/**"> 
-	    <classpath refid="${project.classpath}" />
-	</javac>
-	<copy todir="target/classes/images">
-	    <fileset dir="src/main/resources/images" />
-	</copy>
+        <antcall target="runAntlr"/>
+        <javac srcdir="${sources}:${generated.sources}"
+               destdir="${classes.dir}"
+               excludes="${test.sources}/**">
+            <classpath refid="${project.classpath}"/>
+        </javac>
+        <copy todir="target/classes/images">
+            <fileset dir="src/main/resources/images"/>
+        </copy>
     </target>
 
     <target id="runAntlr" name="runAntlr">
-	<java classname="antlr.Tool"
-	      classpathref="${project.classpath}"
-	      fork="true">
-	    <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
-	    <arg value="src/main/resources/antlr/DOTRecord.g"/>
-	</java>
-	<java classname="antlr.Tool"
-	      classpathref="${project.classpath}"
-	      fork="true">
-	    <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
-	    <arg value="src/main/resources/antlr/DOT.g"/>
-	</java>
-	<java classname="antlr.Tool"
-	      classpathref="${project.classpath}"
-	      fork="true">
-	    <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
-	    <arg value="src/main/resources/antlr/DOTTreeTransformer.g"/>
-	</java>
+        <java classname="antlr.Tool"
+              classpathref="${project.classpath}"
+              fork="true">
+            <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
+            <arg value="src/main/resources/antlr/DOTRecord.g"/>
+        </java>
+        <java classname="antlr.Tool"
+              classpathref="${project.classpath}"
+              fork="true">
+            <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
+            <arg value="src/main/resources/antlr/DOT.g"/>
+        </java>
+        <java classname="antlr.Tool"
+              classpathref="${project.classpath}"
+              fork="true">
+            <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
+            <arg value="src/main/resources/antlr/DOTTreeTransformer.g"/>
+        </java>
     </target>
 
     <target id="sali" name="sali" depends="compile">
-	<unjar dest="${classes.dir}" >
-	    <fileset dir="${lib.dir}"
-		     excludes="cdk-1*.jar,junit*.jar" >
-		<include name="*.jar" />
-	    </fileset>
-	    <!--
-		<filelist dir="/Users/rguha/src/java/cdk/trunk/dist/jar"
-		files="cdk-atomtype.jar cdk-dict.jar
-		cdk-nonotify.jar cdk-formula.jar
-		cdk-charges.jar cdk-core.jar cdk-data.jar cdk-extra.jar
-		cdk-interfaces.jar cdk-io.jar cdk-smiles.jar cdk-render.jar
-		cdk-sdg.jar cdk-standard.jar cdk-valencycheck.jar" />
-	    -->
-	</unjar>
-	<jar jarfile="sali.jar">
-	    <manifest>
-		<attribute name="Main-Class" value="net.claribole.zgrviewer.ZGRViewer" />
-	    </manifest>
-	    <fileset dir="${classes.dir}"> 
-		<include name="**/*" />
-	    </fileset>
-	</jar>
+        <unjar dest="${classes.dir}">
+            <fileset dir="${lib.dir}"
+                     excludes="cdk-1*.jar,junit*.jar">
+                <include name="*.jar"/>
+            </fileset>
+            <!--
+           <filelist dir="/Users/rguha/src/java/cdk/trunk/dist/jar"
+           files="cdk-atomtype.jar cdk-dict.jar
+           cdk-nonotify.jar cdk-formula.jar
+           cdk-charges.jar cdk-core.jar cdk-data.jar cdk-extra.jar
+           cdk-interfaces.jar cdk-io.jar cdk-smiles.jar cdk-render.jar
+           cdk-sdg.jar cdk-standard.jar cdk-valencycheck.jar" />
+           -->
+        </unjar>
+        <jar jarfile="sali.jar">
+            <manifest>
+                <attribute name="Main-Class" value="net.claribole.zgrviewer.ZGRViewer"/>
+            </manifest>
+            <fileset dir="${classes.dir}">
+                <include name="**/*"/>
+            </fileset>
+        </jar>
     </target>
 
     <target id="srcdist" name="srcdist" depends="clean">
-	<loadfile property="version.line" srcfile="src/main/java/net/claribole/zgrviewer/Messages.java">
-	    <filterchain>
-		<linecontainsregexp>
-		    <regexp pattern="static final String SALI_VERSION ="/>
-		</linecontainsregexp>
-	    </filterchain>
-	</loadfile>
-	<propertyregex property="version" input="${version.line}"
-		       regexp="([0-9]*\.[0-9]*\.[0-9]*)"
-		       select="\1"/>
-	<tar
-	    destfile="sali-src-${version}.tgz"
-	    basedir="${basedir}"
-	    compression="gzip"
-	    excludes=".git/**, .gitignore/**, *.ipr, *.iws, *.iml">
-	</tar>
-	<zip
-	    zipfile="sali-src-${version}.zip"
-	    basedir="${basedir}"
-	    excludes=".git/**, .gitignore/**, *.ipr, *.iws, *.iml, sali-src-${version}.tgz">
-	</zip>
+        <loadfile property="version.line" srcfile="src/main/java/net/claribole/zgrviewer/Messages.java">
+            <filterchain>
+                <linecontainsregexp>
+                    <regexp pattern="static final String SALI_VERSION ="/>
+                </linecontainsregexp>
+            </filterchain>
+        </loadfile>
+        <propertyregex property="version" input="${version.line}"
+                       regexp="([0-9]*\.[0-9]*\.[0-9]*)"
+                       select="\1"/>
+        <tar
+                destfile="sali-src-${version}.tgz"
+                basedir="${basedir}"
+                compression="gzip"
+                excludes=".git/**, .gitignore/**, *.ipr, *.iws, *.iml">
+        </tar>
+        <zip
+                zipfile="sali-src-${version}.zip"
+                basedir="${basedir}"
+                excludes=".git/**, .gitignore/**, *.ipr, *.iws, *.iml, sali-src-${version}.tgz">
+        </zip>
     </target>
 
     <target id="info" name="info">
-	<echo message="SALI Viewer (based on ZGRViewer)" />
-	<echo message="Rajarshi Guha (rajarshi.guha@gmail.com) " />
-	<echo message=" " />
-	<echo message="Available targets:" />
-	<echo message=" " />
-	<echo message="info      This message" />
-	<echo message="clean     Remove build directory" />
-	<echo message="compile   Compile sources" />
-	<echo message="sali      Generate the sali viewer jar file" />
-	<echo message="runAntlr  Generate DOT parser files" />
-	<echo message="srcdist   Generate source distribution" />
+        <echo message="SALI Viewer (based on ZGRViewer)"/>
+        <echo message="Rajarshi Guha (rajarshi.guha@gmail.com) "/>
+        <echo message=" "/>
+        <echo message="Available targets:"/>
+        <echo message=" "/>
+        <echo message="info      This message"/>
+        <echo message="clean     Remove build directory"/>
+        <echo message="compile   Compile sources"/>
+        <echo message="sali      Generate the sali viewer jar file"/>
+        <echo message="runAntlr  Generate DOT parser files"/>
+        <echo message="srcdist   Generate source distribution"/>
     </target>
 
 </project>
