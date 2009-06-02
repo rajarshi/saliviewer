@@ -283,7 +283,7 @@ public class DOTManager {
             grMngr.gp.setMessage("Parsing Augmented DOT...");
             grMngr.gp.setProgress(60);
             DataInputStream graphInput = new DataInputStream(new FileInputStream(
-                svgF));
+                svgF));            
             DOTLexer graphLexer = new DOTLexer(graphInput);
             DOTParser graphParser = new DOTParser(graphLexer);
             graphParser.graph();
