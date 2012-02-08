@@ -15,7 +15,7 @@
     <path id="project.libs">
         <fileset dir="${lib.dir}">
             <include name="*.jar"/>
-            <exclude name="cdk-1.1.4.jar"/>
+            <!--<include name="cdk-1.4.7.git.jar"/>-->
         </fileset>
     </path>
     <property name="project.classpath" value="project.libs"/>
@@ -54,7 +54,7 @@
               fork="true">
             <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
             <arg value="src/main/resources/antlr/DOTRecord.g"/>
-        </java>
+        </java>                                 
         <java classname="antlr.Tool"
               classpathref="${project.classpath}"
               fork="true">

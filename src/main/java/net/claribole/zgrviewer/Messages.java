@@ -24,13 +24,13 @@ public class Messages {
 
     static final String VERSION = "0.8.0";
 
-    static final String SALI_VERSION = "1.9";
+    static final String SALI_VERSION = "2.0";
 
     static final String about = "SALI Viewer ("+SALI_VERSION+") based on ZGRViewer " + VERSION +
             "\n\nA Visualization Tool for GraphViz based on ZVTM"+
             "\nhttp://zvtm.sourceforge.net/zgrviewer.html\n\n"+
             "Written by Emmanuel Pietriga\n(INRIA project In Situ)\nemmanuel.pietriga@inria.fr"+
-            "\n\nModified by Rajarshi Guha\nrguha@indiana.edu";
+            "\n\nModified by Rajarshi Guha\nrajarshi.guha@gmail.com";
 
     static final String commands="Under Mac OS X, replace Ctrl by the Command key\n\nMisc. Commands\n"
 	+"* Press right mouse button to display the pie menu\n\n"

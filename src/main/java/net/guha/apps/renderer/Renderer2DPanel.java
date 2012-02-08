@@ -1,23 +1,29 @@
 package net.guha.apps.renderer;
 
 import net.claribole.zgrviewer.ConfigManager;
-import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.controller.ControllerHub;
-import org.openscience.cdk.controller.ControllerModel;
 import org.openscience.cdk.controller.IViewEventRelay;
 import org.openscience.cdk.interfaces.IAtomContainer;
-import org.openscience.cdk.interfaces.IChemModel;
-import org.openscience.cdk.interfaces.IMolecule;
-import org.openscience.cdk.interfaces.IMoleculeSet;
+import org.openscience.cdk.renderer.AtomContainerRenderer;
 import org.openscience.cdk.renderer.RendererModel;
-import org.openscience.cdk.renderer.RenderingParameters;
 import org.openscience.cdk.renderer.font.AWTFontManager;
-import org.openscience.cdk.renderer.generators.*;
+import org.openscience.cdk.renderer.generators.BasicAtomGenerator;
+import org.openscience.cdk.renderer.generators.BasicBondGenerator;
+import org.openscience.cdk.renderer.generators.BasicSceneGenerator;
+import org.openscience.cdk.renderer.generators.IGenerator;
+import org.openscience.cdk.renderer.generators.RingGenerator;
 import org.openscience.cdk.renderer.visitor.AWTDrawVisitor;
 import org.openscience.cdk.renderer.visitor.IDrawVisitor;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -30,19 +36,22 @@ import java.util.ArrayList;
  * @author Rajarshi Guha
  */
 public class Renderer2DPanel extends JPanel implements IViewEventRelay {
-    private org.openscience.cdk.renderer.Renderer renderer;
+
+    private AtomContainerRenderer renderer;
+
+    private boolean isNew;
+
     private boolean isNewChemModel;
-    private ControllerHub hub;
-    private ControllerModel controllerModel;
     private boolean shouldPaintFromCache;
-    IMolecule molecule;
+    IAtomContainer molecule;
     boolean fitToScreen = true;
     IDrawVisitor drawVisitor;
-    RendererModel rendererModel;
 
     String title = "NA";
     double activity = -9999.0;
     DecimalFormat activityFormat = new DecimalFormat("############.00");
+    private int preferredWidth;
+    private int preferredHeight;
 
 
     /**
@@ -62,59 +71,41 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
     /**
      * Create an instance of the rendering panel.
      *
-     * @param mol          molecule to render. Should have 2D coordinates
-     * @param needle       A fragment representing a substructure of the above molecule.
- *                     This substructure will be highlighted in the depiction. If no substructure
- *                     is to be highlighted, then set this to null
-     * @param x            width of the panel
-     * @param y            height of the panel
-     * @param name         The name of the molecule
-     * @param activity     The activity associated with the molecule
+     * @param mol      molecule to render. Should have 2D coordinates
+     * @param needle   A fragment representing a substructure of the above molecule.
+     *                 This substructure will be highlighted in the depiction. If no substructure
+     *                 is to be highlighted, then set this to null
+     * @param x        width of the panel
+     * @param y        height of the panel
+     * @param name     The name of the molecule
+     * @param activity The activity associated with the molecule
      */
     public Renderer2DPanel(IAtomContainer mol, IAtomContainer needle, int x, int y,
                            String name, double activity) {
         this.title = name;
         this.activity = activity;
-        this.molecule = (IMolecule) mol;
+        this.molecule = mol;
+        this.preferredWidth = x;
+        this.preferredHeight = y;
 
         setPreferredSize(new Dimension(x, y));
         setBackground(Color.WHITE);
 
-        IMoleculeSet moleculeSet = DefaultChemObjectBuilder.getInstance().newMoleculeSet();
-        moleculeSet.addMolecule(this.molecule);
-        IChemModel chemModel = DefaultChemObjectBuilder.getInstance().newChemModel();
-        chemModel.setMoleculeSet(moleculeSet);
+        java.util.List<IGenerator<IAtomContainer>> generators = new ArrayList<IGenerator<IAtomContainer>>();
+        generators.add(new BasicSceneGenerator());
+        generators.add(new RingGenerator());
+        generators.add(new BasicBondGenerator());
+        generators.add(new BasicAtomGenerator());
 
-        rendererModel = new RendererModel();
-        rendererModel.setShowAromaticity(true);
-
-        java.util.List<IGenerator> generators = new ArrayList<IGenerator>();
-        generators.add(new RingGenerator(rendererModel));
-        generators.add(new BasicAtomGenerator(rendererModel));
-        generators.add(new HighlightGenerator(rendererModel));
-//        generators.add(new ExternalHighlightGenerator(rendererModel));
-
-        renderer = new org.openscience.cdk.renderer.Renderer(generators, new AWTFontManager());
-
-        controllerModel = new ControllerModel();
-        hub = new ControllerHub(controllerModel, renderer, chemModel, this);
-        hub.getRenderer().getRenderer2DModel().setColorAtomsByType(false);
-        hub.getRenderer().getRenderer2DModel().setShowAromaticity(true);
-        hub.getRenderer().getRenderer2DModel().setFitToScreen(true);
-        hub.getRenderer().getRenderer2DModel().setUseAntiAliasing(true);
-        hub.getRenderer().getRenderer2DModel().setZoomFactor(0.9);
+        this.renderer = new AtomContainerRenderer(generators, new AWTFontManager());
+        isNew = true;
 
         if (needle != null) {
-            System.out.println("Setting needle");
-//            hub.getRenderer().getRenderer2DModel().getSelection().select(needle);
-            hub.getRenderer().getRenderer2DModel().setExternalSelectedPart(needle);
-//            hub.getRenderer().getRenderer2DModel().setExternalHighlightColor(Color.red);
-            hub.getRenderer().getRenderer2DModel().setHighlightRadiusModel(0);
-            hub.getRenderer().getRenderer2DModel().setSelectionShape(RenderingParameters.AtomShape.SQUARE);
+            RendererModel model = renderer.getRenderer2DModel();
+            model.setExternalSelectedPart(needle);
+            RendererModel.ExternalHighlightColor param = model.getParameter(RendererModel.ExternalHighlightColor.class);
+            param.setValue(Color.GREEN);
         }
-
-        isNewChemModel = true;
-
     }
 
     public Image takeSnapshot() {
@@ -131,71 +122,70 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
         super.paint(g);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        this.paintChemModel(g, bounds);
+        paint(g);
+//        this.paintChemModel(g, bounds);
         return image;
     }
 
-    public void paintChemModel(Graphics2D g, Rectangle screenBounds) {
+//    public void paintChemModel(Graphics2D g, Rectangle screenBounds) {
+//
+//        IChemModel chemModel = renderer.getRenderer2DModel().get;
+//        if (chemModel != null && chemModel.getMoleculeSet() != null) {
+//            Rectangle diagramBounds = renderer.calculateScreenBounds(chemModel);
+//            if (this.overlaps(screenBounds, diagramBounds)) {
+//                Rectangle union = screenBounds.union(diagramBounds);
+//                this.setPreferredSize(union.getSize());
+//                this.revalidate();
+//            }
+//            this.paintChemModel(chemModel, g, screenBounds);
+//        }
+//    }
 
-        IChemModel chemModel = hub.getIChemModel();
-        if (chemModel != null && chemModel.getMoleculeSet() != null) {
-            Rectangle diagramBounds = renderer.calculateScreenBounds(chemModel);
-            if (this.overlaps(screenBounds, diagramBounds)) {
-                Rectangle union = screenBounds.union(diagramBounds);
-                this.setPreferredSize(union.getSize());
-                this.revalidate();
-            }
-            this.paintChemModel(chemModel, g, screenBounds);
-        }
-    }
-
-    private boolean overlaps(Rectangle screenBounds, Rectangle diagramBounds) {
-        return screenBounds.getMinX() > diagramBounds.getMinX()
-                || screenBounds.getMinY() > diagramBounds.getMinY()
-                || screenBounds.getMaxX() < diagramBounds.getMaxX()
-                || screenBounds.getMaxY() < diagramBounds.getMaxY();
-    }
-
-
-    private void paintChemModel(IChemModel chemModel, Graphics2D g, Rectangle bounds) {
-        drawVisitor = new AWTDrawVisitor(g);
-        renderer.paintChemModel(chemModel, drawVisitor, bounds, isNewChemModel);
-        isNewChemModel = false;
-
-        /*
-         * This is dangerous, but necessary to allow fast
-         * repainting when scrolling the canvas.
-         *
-         * I set this to false, but the original code has it set to true.
-         * If set to true, then any change in dimensions requires a call to
-         * updateView() - by setting to false, we don't need to call updateView()
-         */
-        this.shouldPaintFromCache = false;
-    }
+//    private boolean overlaps(Rectangle screenBounds, Rectangle diagramBounds) {
+//        return screenBounds.getMinX() > diagramBounds.getMinX()
+//                || screenBounds.getMinY() > diagramBounds.getMinY()
+//                || screenBounds.getMaxX() < diagramBounds.getMaxX()
+//                || screenBounds.getMaxY() < diagramBounds.getMaxY();
+//    }
+//
+//
+//    private void paintChemModel(IChemModel chemModel, Graphics2D g, Rectangle bounds) {
+//        drawVisitor = new AWTDrawVisitor(g);
+//        renderer.paintChemModel(chemModel, drawVisitor, bounds, isNewChemModel);
+//        isNewChemModel = false;
+//
+//        /*
+//         * This is dangerous, but necessary to allow fast
+//         * repainting when scrolling the canvas.
+//         *
+//         * I set this to false, but the original code has it set to true.
+//         * If set to true, then any change in dimensions requires a call to
+//         * updateView() - by setting to false, we don't need to call updateView()
+//         */
+//        this.shouldPaintFromCache = false;
+//    }
 
     public void setIsNewChemModel(boolean isNewChemModel) {
-        this.isNewChemModel = isNewChemModel;
+        this.isNew = isNewChemModel;
     }
 
     public void paint(Graphics g) {
-        this.setBackground(renderer.getRenderer2DModel().getBackColor());
         super.paint(g);
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        if (this.shouldPaintFromCache) {
-            this.paintFromCache(g2);
-        } else {
-            this.paintChemModel(g2, this.getBounds());
-            this.paintChemModel(g2, new Rectangle(0, 0, getWidth(), getHeight()));
 
+        if (this.isNew) {
+            Rectangle drawArea = new Rectangle(0, 0, this.getWidth(), this.getWidth());
+            this.renderer.setup(molecule, drawArea);
+            this.isNew = false;
+            this.renderer.paint(molecule, new AWTDrawVisitor((Graphics2D) g), drawArea, isNew);
+        } else {
+            Rectangle drawArea = new Rectangle(0, 0, this.getWidth(), this.getHeight());
+            this.renderer.setup(molecule, drawArea);
+            this.renderer.paint(molecule, new AWTDrawVisitor((Graphics2D) g), drawArea, false);
         }
+
         annotateFigure(g);
     }
 
-
-    private void paintFromCache(Graphics2D g) {
-        renderer.repaint(drawVisitor = new AWTDrawVisitor(g));
-    }
 
     /**
      * Adds the molecule title and activity to the depiction.
@@ -203,7 +193,7 @@ public class Renderer2DPanel extends JPanel implements IViewEventRelay {
      * @param g The graphics context
      */
     private void annotateFigure(Graphics g) {
-        g.setFont(ConfigManager.defaultFont);        
+        g.setFont(ConfigManager.defaultFont);
 
         double w = getSize().width;
         double h = getSize().height;

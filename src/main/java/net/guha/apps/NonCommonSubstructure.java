@@ -51,7 +51,7 @@ public class NonCommonSubstructure {
         }
 
         HashSet hs = new HashSet(idlist);
-        IAtomContainer noncommon = DefaultChemObjectBuilder.getInstance().newAtomContainer();
+        IAtomContainer noncommon = DefaultChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
 
         for (int i = 0; i < atomContainer.getBondCount(); i++) {
             boolean inMCSS = false;

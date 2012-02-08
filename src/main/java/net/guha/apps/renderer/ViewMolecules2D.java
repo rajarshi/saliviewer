@@ -1,9 +1,7 @@
 package net.guha.apps.renderer;
 
-import net.guha.apps.renderer.Renderer2DPanel;
-
 import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -20,7 +18,6 @@ public class ViewMolecules2D {
     public static JFrame multiStructurePanel(Renderer2DPanel[] panels, int ncol,
                                              int cellx, int celly) {
         if (panels.length != 2) return null;
-        panels[1].setBackground(Color.red);
         
         JFrame frame = new JFrame("2D Structure Viewer");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

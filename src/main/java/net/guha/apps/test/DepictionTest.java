@@ -78,7 +78,7 @@ public class DepictionTest {
         sdg.generateCoordinates();
         molecule = sdg.getMolecule();
 
-        IAtomContainer needle = DefaultChemObjectBuilder.getInstance().newAtomContainer();
+        IAtomContainer needle = DefaultChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
         needle.addAtom(molecule.getAtom(0));
         needle.addAtom(molecule.getAtom(1));
         needle.addAtom(molecule.getAtom(2));
@@ -99,7 +99,7 @@ public class DepictionTest {
 
     public static void main(String[] args) throws Exception {
         DepictionTest dt = new DepictionTest();
-        dt.runCase2();
+        dt.runCase3();
 
     }
 

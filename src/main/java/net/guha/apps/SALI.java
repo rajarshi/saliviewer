@@ -11,19 +11,30 @@ import org.openscience.cdk.fingerprint.Fingerprinter;
 import org.openscience.cdk.fingerprint.GraphOnlyFingerprinter;
 import org.openscience.cdk.fingerprint.IFingerprinter;
 import org.openscience.cdk.nonotify.NNMolecule;
-import org.openscience.cdk.nonotify.NoNotificationChemObjectBuilder;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.similarity.Tanimoto;
 import org.openscience.cdk.smiles.SmilesParser;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
-import java.net.URL;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.regex.Pattern;
 
 /**
@@ -74,7 +85,7 @@ public class SALI {
         graphicsManager.gp.setProgress(0);
         graphicsManager.gp.setVisible(true);
 
-        SmilesParser sp = new SmilesParser(NoNotificationChemObjectBuilder.getInstance());
+        SmilesParser sp = new SmilesParser(SilentChemObjectBuilder.getInstance());
 
         // generate fingerprints
         BitSet[] fingerprints = new BitSet[nmol];
@@ -227,6 +238,7 @@ public class SALI {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(graphicsManager.mainView.getFrame(),
                     "Error writing initial network", "SALI Network Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
             return;
         }
         graphicsManager.reset();
