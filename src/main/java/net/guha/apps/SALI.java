@@ -10,7 +10,7 @@ import org.openscience.cdk.fingerprint.ExtendedFingerprinter;
 import org.openscience.cdk.fingerprint.Fingerprinter;
 import org.openscience.cdk.fingerprint.GraphOnlyFingerprinter;
 import org.openscience.cdk.fingerprint.IFingerprinter;
-import org.openscience.cdk.nonotify.NNMolecule;
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.similarity.Tanimoto;
 import org.openscience.cdk.smiles.SmilesParser;
@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 /**
  * Main class that performs SALI calculations.
- * 
+ *
  * @author Rajarshi Guha
  */
 public class SALI {
@@ -100,9 +100,9 @@ public class SALI {
             fingerPrinter = new Fingerprinter(ConfigManager.fpLength, ConfigManager.fpDepth);
 
         for (int i = 0; i < nmol; i++) {
-            NNMolecule mol = null;
+            IAtomContainer mol = null;
             try {
-                mol = (NNMolecule) sp.parseSmiles(smiles[i]);
+                mol = sp.parseSmiles(smiles[i]);
             } catch (InvalidSmilesException e) {
                 displayErrorMessage("Couldn't parse SMILES: " + smiles[i] + "\nAborting SALI calculation");
             }

@@ -54,7 +54,7 @@
               fork="true">
             <arg line="-o ${build.dir}/generated-sources/antlr/net/claribole/zgrviewer/dot"/>
             <arg value="src/main/resources/antlr/DOTRecord.g"/>
-        </java>                                 
+        </java>
         <java classname="antlr.Tool"
               classpathref="${project.classpath}"
               fork="true">
