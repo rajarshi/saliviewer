@@ -3,8 +3,7 @@ SALI Viewer
 This is a Java application to generate and explore SALI networks and SALI
 curves as described in references [1] and [2]. The code is based on
 the CDK and a heavily modified version of ZGRviewer (0.8.0). See
-http://cheminfo.informatics.indiana.edu/~rguha/code/java/salivis/ for 
-more details on usage.
+http://sali.rguha.net for more details on usage.
 
 Note that this repository hosts the development code. To get the last
 stable release, visit the above URL.
